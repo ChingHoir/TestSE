@@ -1,47 +1,23 @@
 package com.library.config;
 
-import com.library.entity.Role;
-import com.library.entity.User;
-import com.library.repository.RoleRepository;
-import com.library.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
     
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
-    
     @Override
     public void run(String... args) throws Exception {
-        // Create roles if they don't exist
-        Role librarianRole = roleRepository.findByName("LIBRARIAN")
-            .orElseGet(() -> roleRepository.save(new Role("LIBRARIAN")));
-        
-        Role memberRole = roleRepository.findByName("MEMBER")
-            .orElseGet(() -> roleRepository.save(new Role("MEMBER")));
-        
-        // Create admin user if doesn't exist
-        if (!userRepository.existsByUsername("admin")) {
-            User admin = new User("admin", passwordEncoder.encode("admin123"), 
-                "Admin User", "admin@library.com");
-            admin.getRoles().add(librarianRole);
-            userRepository.save(admin);
-            System.out.println("Admin user created: admin/admin123");
-        }
-        
-        // Create member user if doesn't exist
-        if (!userRepository.existsByUsername("user")) {
-            User user = new User("user", passwordEncoder.encode("user123"), 
-                "Regular User", "user@library.com");
-            user.getRoles().add(memberRole);
-            userRepository.save(user);
-            System.out.println("Member user created: user/user123");
-        }
+        log.info("==============================================");
+        log.info("Database initialized via Flyway migrations");
+        log.info("Default users created:");
+        log.info("  - Admin: admin/admin123 (LIBRARIAN role)");
+        log.info("  - Member: user/user123 (MEMBER role)");
+        log.info("Sample books have been added to the library");
+        log.info("==============================================");
     }
 }

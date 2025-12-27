@@ -13,6 +13,7 @@ public class BorrowRecord {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -23,16 +24,17 @@ public class BorrowRecord {
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
     
-    @Column(nullable = false)
+    @Column(name = "borrow_date", nullable = false)
     private LocalDate borrowDate;
     
-    @Column(nullable = false)
+    @Column(name = "return_deadline", nullable = false)
     private LocalDate returnDeadline;
     
+    @Column(name = "actual_return_date")
     private LocalDate actualReturnDate;
     
-    @Column(nullable = false)
-    private String status; // BORROWED, RETURNED, OVERDUE
+    @Column(name = "status", length = 20, nullable = false)
+    private String status; // BORROWED, RETURNED, OVERDUE, RETURNED_LATE
     
     public BorrowRecord(User user, Book book, LocalDate borrowDate, LocalDate returnDeadline) {
         this.user = user;
