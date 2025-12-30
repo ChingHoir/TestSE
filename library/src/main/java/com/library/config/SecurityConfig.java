@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/login", "/register").permitAll()
                 .requestMatchers("/admin/**").hasRole("LIBRARIAN")
-                .requestMatchers("/borrow/**").hasRole("MEMBER")
+                .requestMatchers("/borrow/**").hasAnyRole("MEMBER", "LIBRARIAN")
                 .requestMatchers("/").authenticated()
                 .anyRequest().authenticated()
             )

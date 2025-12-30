@@ -16,11 +16,11 @@ public class BorrowRecord {
     @Column(name = "id")
     private Long id;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
     
@@ -34,7 +34,7 @@ public class BorrowRecord {
     private LocalDate actualReturnDate;
     
     @Column(name = "status", length = 20, nullable = false)
-    private String status; // BORROWED, RETURNED, OVERDUE, RETURNED_LATE
+    private String status; // BORROWED, RETURNED, OVERDUE
     
     public BorrowRecord(User user, Book book, LocalDate borrowDate, LocalDate returnDeadline) {
         this.user = user;

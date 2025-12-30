@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - ER Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        .diagram-container {
+            position: relative;
+            min-height: 800px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .entity {
+            position: absolute;
+            background: white;
+            border: 3px solid #2c3e50;
+            border-radius: 10px;
+            padding: 20px;
+            min-width: 220px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .entity:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        
+        .entity-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            margin: -20px -20px 15px -20px;
+            border-radius: 7px 7px 0 0;
+            font-weight: bold;
+            font-size: 1.2em;
+            text-align: center;
+        }
+        
+        .attribute {
+            padding: 8px 0;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 0.95em;
+            color: #2c3e50;
+        }
+        
+        .attribute:last-child {
+            border-bottom: none;
+        }
+        
+        .pk {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .fk {
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .unique {
+            color: #f39c12;
+        }
+        
+        /* Entity positions */
+        .user-entity {
+            top: 300px;
+            left: 50px;
+        }
+        
+        .role-entity {
+            top: 50px;
+            left: 50px;
+        }
+        
+        .user-roles-entity {
+            top: 150px;
+            left: 350px;
+            background: #fff3cd;
+        }
+        
+        .book-entity {
+            top: 300px;
+            right: 50px;
+        }
+        
+        .borrow-entity {
+            top: 500px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Relationship lines */
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .entity {
+            z-index: 2;
+        }
+        
+        line {
+            stroke: #34495e;
+            stroke-width: 2;
+        }
+        
+        .relationship-label {
+            position: absolute;
+            background: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: #e74c3c;
+            border: 2px solid #e74c3c;
+            z-index: 3;
+            white-space: nowrap;
+        }
+        
+        .cardinality {
+            position: absolute;
+            background: #3498db;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 50%;
+            font-size: 0.8em;
+            font-weight: bold;
+            z-index: 3;
+            min-width: 30px;
+            text-align: center;
+        }
+        
+        .legend {
+            margin-top: 30px;
+            padding: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+        }
+        
+        .legend h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .legend-item {
+            display: inline-block;
+            margin-right: 30px;
+            margin-bottom: 10px;
+        }
+        
+        .legend-color {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        .cardinality-table {
+            margin-top: 30px;
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .cardinality-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .cardinality-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .cardinality-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .cardinality-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .notation {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f4f8;
+            border-radius: 10px;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Library Management System</h1>
+        <p class="subtitle">Entity-Relationship Diagram with Cardinality Notation</p>
+        
+        <div class="diagram-container">
+            <svg>
+                <!-- Role to User-Roles -->
+                <line x1="170" y1="130" x2="370" y2="180" stroke-dasharray="5,5"/>
+                
+                <!-- User-Roles to User -->
+                <line x1="370" y1="230" x2="170" y2="340" stroke-dasharray="5,5"/>
+                
+                <!-- User to Borrow -->
+                <line x1="170" y1="500" x2="500" y2="560"/>
+                
+                <!-- Book to Borrow -->
+                <line x1="1050" y1="500" x2="750" y2="560"/>
+            </svg>
+            
+            <!-- ROLE Entity -->
+            <div class="entity role-entity">
+                <div class="entity-header">ROLE</div>
+                <div class="attribute pk">🔑 id (PK)</div>
+                <div class="attribute unique">name (UNIQUE)</div>
+            </div>
+            
+            <!-- USER_ROLES Junction Entity -->
+            <div class="entity user-roles-entity">
+                <div class="entity-header">USER_ROLES</div>
+                <div class="attribute fk">🔗 user_id (PK, FK)</div>
+                <div class="attribute fk">🔗 role_id (PK, FK)</div>
+            </div>
+            
+            <!-- USER Entity -->
+            <div class="entity user-entity">
+                <div class="entity-header">USER</div>
+                <div class="attribute pk">🔑 id (PK)</div>
+                <div class="attribute unique">username (UNIQUE)</div>
+                <div class="attribute">password</div>
+                <div class="attribute">full_name</div>
+                <div class="attribute unique">email (UNIQUE)</div>
+            </div>
+            
+            <!-- BOOK Entity -->
+            <div class="entity book-entity">
+                <div class="entity-header">BOOK</div>
+                <div class="attribute pk">🔑 id (PK)</div>
+                <div class="attribute">title</div>
+                <div class="attribute">author</div>
+                <div class="attribute unique">isbn (UNIQUE)</div>
+                <div class="attribute">genre</div>
+                <div class="attribute">quantity</div>
+                <div class="attribute">is_available</div>
+            </div>
+            
+            <!-- BORROW_RECORD Entity -->
+            <div class="entity borrow-entity">
+                <div class="entity-header">BORROW_RECORD</div>
+                <div class="attribute pk">🔑 id (PK)</div>
+                <div class="attribute fk">🔗 user_id (FK)</div>
+                <div class="attribute fk">🔗 book_id (FK)</div>
+                <div class="attribute">borrow_date</div>
+                <div class="attribute">return_deadline</div>
+                <div class="attribute">actual_return_date</div>
+                <div class="attribute">status</div>
+            </div>
+            
+            <!-- Cardinality Notations -->
+            <div class="cardinality" style="top: 105px; left: 140px;">N</div>
+            <div class="cardinality" style="top: 155px; left: 315px;">M</div>
+            <div class="relationship-label" style="top: 125px; left: 200px;">has</div>
+            
+            <div class="cardinality" style="top: 205px; left: 315px;">M</div>
+            <div class="cardinality" style="top: 265px; left: 140px;">N</div>
+            <div class="relationship-label" style="top: 245px; left: 200px;">assigned to</div>
+            
+            <div class="cardinality" style="top: 475px; left: 140px;">1</div>
+            <div class="cardinality" style="top: 535px; left: 420px;">N</div>
+            <div class="relationship-label" style="top: 505px; left: 270px;">borrows</div>
+            
+            <div class="cardinality" style="top: 475px; right: 325px;">1</div>
+            <div class="cardinality" style="top: 535px; right: 520px;">N</div>
+            <div class="relationship-label" style="top: 505px; right: 395px;">borrowed in</div>
+        </div>
+        
+        <div class="notation">
+            <strong>Cardinality Notation:</strong> 1 = One | N = Many | M = Many | (1:N) = One-to-Many | (M:N) = Many-to-Many
+        </div>
+        
+        <div class="legend">
+            <h3>Legend</h3>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #e74c3c;"></span>
+                <span class="pk">Primary Key (PK)</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #3498db;"></span>
+                <span class="fk">Foreign Key (FK)</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #f39c12;"></span>
+                <span class="unique">Unique Constraint</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #fff3cd;"></span>
+                <span>Junction Table</span>
+            </div>
+        </div>
+        
+        <table class="cardinality-table">
+            <thead>
+                <tr>
+                    <th>Relationship</th>
+                    <th>From Entity</th>
+                    <th>To Entity</th>
+                    <th>Cardinality</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>has / assigned to</strong></td>
+                    <td>USER</td>
+                    <td>ROLE</td>
+                    <td><strong>M:N (Many-to-Many)</strong></td>
+                    <td>A user can have multiple roles (LIBRARIAN + MEMBER), and a role can be assigned to multiple users</td>
+                </tr>
+                <tr>
+                    <td><strong>borrows</strong></td>
+                    <td>USER</td>
+                    <td>BORROW_RECORD</td>
+                    <td><strong>1:N (One-to-Many)</strong></td>
+                    <td>One user can have many borrow records (borrowing history)</td>
+                </tr>
+                <tr>
+                    <td><strong>borrowed in</strong></td>
+                    <td>BOOK</td>
+                    <td>BORROW_RECORD</td>
+                    <td><strong>1:N (One-to-Many)</strong></td>
+                    <td>One book can have many borrow records (borrowed multiple times over different periods)</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div style="margin-top: 30px; padding: 20px; background: #e8f8f5; border-left: 4px solid #27ae60; border-radius: 5px;">
+            <h3 style="color: #27ae60; margin-bottom: 10px;">📊 Cardinality Breakdown</h3>
+            <ul style="line-height: 2; color: #2c3e50;">
+                <li><strong>USER ↔ ROLE (M:N):</strong> Implemented via junction table USER_ROLES with composite primary key (user_id, role_id)</li>
+                <li><strong>USER → BORROW_RECORD (1:N):</strong> One user can create multiple borrow records; user_id is foreign key in BORROW_RECORD</li>
+                <li><strong>BOOK → BORROW_RECORD (1:N):</strong> One book can be borrowed multiple times; book_id is foreign key in BORROW_RECORD</li>
+            </ul>
+        </div>
+        
+        <div style="margin-top: 20px; padding: 20px; background: #fff3cd; border-left: 4px solid #f39c12; border-radius: 5px;">
+            <h3 style="color: #e67e22; margin-bottom: 10px;">⚠️ Important Notes</h3>
+            <ul style="line-height: 2; color: #2c3e50;">
+                <li><strong>Cascade Delete:</strong> Deleting a USER or BOOK will cascade delete related records in USER_ROLES and BORROW_RECORD</li>
+                <li><strong>Referential Integrity:</strong> Foreign keys enforce data consistency across all relationships</li>
+                <li><strong>Junction Table:</strong> USER_ROLES enables the many-to-many relationship between USER and ROLE</li>
+                <li><strong>Temporal Data:</strong> BORROW_RECORD maintains historical data even after books are returned</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

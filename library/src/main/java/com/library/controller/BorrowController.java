@@ -8,6 +8,7 @@ import com.library.service.BorrowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -68,6 +69,7 @@ public class BorrowController {
     }
     
     @GetMapping("/admin/borrows")
+    @Transactional(readOnly = true)
     public String showAllBorrows(Model model) {
         model.addAttribute("borrowRecords", borrowService.getAllBorrowRecords());
         return "borrows/admin-list";
